@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import ru.yandex.practicum.filmrate.controller.FilmController;
 import ru.yandex.practicum.filmrate.model.Film;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
@@ -35,7 +36,7 @@ public class FilmControllerTest {
     }
 
 
-   @Test
+    @Test
     public void updateNonExistedFilm() throws ValidateException {
         Film film = new Film(2, "Пролетая над гнездом кукушки", underLimit, LocalDate.of(1975, Month.MAY, 16), 210);
 

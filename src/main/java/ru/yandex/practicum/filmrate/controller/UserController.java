@@ -17,6 +17,7 @@ import java.util.Map;
 public class UserController {
     private int id = 1;
     private Map<Integer, User> users = new HashMap<>();
+
     @GetMapping(value = "/users")
     public List<User> getAll() {
         return new ArrayList<>(users.values());
@@ -46,18 +47,18 @@ public class UserController {
     }
 
     private void validate(User user) throws ValidateException {
-       if (user.getEmail().indexOf('@') == -1 || user.getEmail().isBlank()) {
+        if (user.getEmail().indexOf('@') == -1 || user.getEmail().isBlank()) {
             log.error("Некорректный ввод почтового ящика " + user.getEmail());
             throw new ValidateException("Электронная почта не может быть пустой и должна содержать символ @");
         } else if (user.getLogin().contains(" ") || user.getLogin().isBlank()) {
             log.error("Некорректный ввод логина " + user.getEmail());
             throw new ValidateException("Логин не может быть пустым или содержать пробелы");
-        } /*else if (user.getBirthday().isAfter(LocalDate.now())) {
-           log.error("Дата рождения юзера  " + user.getEmail() + " была введена ошибочно");
-           throw new ValidateException("Дата рождения не может быть выше сегодняшнего дня");
-       }*/ else if (user.getName() == null || user.getName().isBlank()) {
-           user.setName(user.getLogin());
-           log.warn("Пустое имя, было присвоено значение логина " + user.getLogin());
-       }
+        } else if (user.getBirthday().isAfter(LocalDate.now())) {
+            log.error("Дата рождения юзера  " + user.getEmail() + " была введена ошибочно");
+            throw new ValidateException("Дата рождения не может быть выше сегодняшнего дня");
+        } else if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+            log.warn("Пустое имя, было присвоено значение логина " + user.getLogin());
+        }
     }
 }

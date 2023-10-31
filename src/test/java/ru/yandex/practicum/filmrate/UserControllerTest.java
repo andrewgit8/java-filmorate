@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import ru.yandex.practicum.filmrate.controller.UserController;
 import ru.yandex.practicum.filmrate.model.User;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
