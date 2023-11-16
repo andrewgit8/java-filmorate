@@ -6,6 +6,7 @@ import org.junit.jupiter.api.function.Executable;
 import ru.yandex.practicum.filmrate.controller.FilmController;
 import ru.yandex.practicum.filmrate.exception.ValidateException;
 import ru.yandex.practicum.filmrate.model.Film;
+import ru.yandex.practicum.filmrate.storage.InMemoryFilmStorage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +25,7 @@ public class FilmControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        filmController = new FilmController();
+        filmController = new FilmController(new InMemoryFilmStorage());
     }
 
 

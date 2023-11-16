@@ -6,6 +6,8 @@ import org.junit.jupiter.api.function.Executable;
 import ru.yandex.practicum.filmrate.controller.UserController;
 import ru.yandex.practicum.filmrate.exception.ValidateException;
 import ru.yandex.practicum.filmrate.model.User;
+import ru.yandex.practicum.filmrate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmrate.storage.UserService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +21,7 @@ public class UserControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        userController = new UserController();
+        userController = new UserController(new InMemoryUserStorage(), new UserService(new InMemoryUserStorage()));
     }
 
     @Test
