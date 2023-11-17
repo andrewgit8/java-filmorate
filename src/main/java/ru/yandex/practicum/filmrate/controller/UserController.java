@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmrate.storage.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -22,6 +23,23 @@ public class UserController {
         this.inMemoryUserStorage = inMemoryUserStorage;
         this.userService = userService;
     }
+
+    @GetMapping(value = "/users/{id}")
+    public User getUserById(@PathVariable Integer id) {
+        return userService.getUserById(id);
+    }
+
+    @GetMapping(value = "/users/{id}/friends/common/{otherId}")
+    public Set<User> getCommonFriends(@PathVariable Integer id,
+                                      @PathVariable Integer otherId) {
+        return userService.getCommonFriends(id, otherId);
+    }
+
+    @GetMapping(value = "/users/{id}/friends")
+    public Set<User> getFriends(@PathVariable Integer id) {
+        return userService.getFriends(id);
+    }
+
     @PutMapping(value = "/users/{id}/friends/{friendId}")
     public void addFriend(@PathVariable Integer id,
                           @PathVariable Integer friendId) {

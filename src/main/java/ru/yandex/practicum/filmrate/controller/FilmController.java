@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmrate.exception.ValidateException;
 import ru.yandex.practicum.filmrate.model.Film;
+import ru.yandex.practicum.filmrate.storage.FilmService;
 import ru.yandex.practicum.filmrate.storage.InMemoryFilmStorage;
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -16,11 +17,36 @@ import java.util.List;
 public class FilmController {
 
     private InMemoryFilmStorage inMemoryFilmStorage;
+    private FilmService filmService;
 
     @Autowired
-    public FilmController(InMemoryFilmStorage inMemoryFilmStorage) {
+    public FilmController(InMemoryFilmStorage inMemoryFilmStorage, FilmService filmService) {
         this.inMemoryFilmStorage = inMemoryFilmStorage;
+        this.filmService = filmService;
     }
+
+    @GetMapping(value = "/films/{id}")
+        public Film getFilmById(@PathVariable Integer id) {
+            return inMemoryFilmStorage.getFilm(id);
+        }
+
+    @GetMapping(value = "/films/popular")
+    public List<Film> getCountFilms(@RequestParam(required = false, defaultValue = "10") String count) {
+        return filmService.getCountFilms(Integer.parseInt(count));
+    }
+
+    @DeleteMapping(value = "/films/{id}/like/{userId}")
+    public void deleteLike(@PathVariable Integer id,
+                           @PathVariable Integer userId) {
+        filmService.deleteLike(id, userId);
+    }
+
+    @PutMapping(value = "/films/{id}/like/{userId}")
+    public void putLike(@PathVariable Integer id,
+                        @PathVariable Integer userId) {
+        filmService.putLike(id, userId);
+    }
+
 
     @GetMapping(value = "/films")
     public List<Film> getAll() {

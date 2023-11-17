@@ -40,11 +40,8 @@ public class User {
         this.birthday = birthday;
     }
 
-    public void addFriend(User user) {
-        friendlist.add(user);
-    }
-
-    public void removeFriend(User user) {
-        friendlist.remove(user);
+    public Set<User> getFriendlist() {
+        return friendlist;
     }
 }
+
