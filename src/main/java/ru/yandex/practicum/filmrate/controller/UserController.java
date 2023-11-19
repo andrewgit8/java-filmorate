@@ -2,7 +2,9 @@ package ru.yandex.practicum.filmrate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmrate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmrate.exception.ValidateException;
 import ru.yandex.practicum.filmrate.model.User;
 import ru.yandex.practicum.filmrate.storage.InMemoryUserStorage;
@@ -10,6 +12,7 @@ import ru.yandex.practicum.filmrate.storage.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Slf4j
@@ -22,6 +25,12 @@ public class UserController {
     public UserController(InMemoryUserStorage inMemoryUserStorage, UserService userService) {
         this.inMemoryUserStorage = inMemoryUserStorage;
         this.userService = userService;
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleNotFound(final UserNotFoundException e) {
+        return Map.of("Ошибка", e.getMessage());
     }
 
     @GetMapping(value = "/users/{id}")

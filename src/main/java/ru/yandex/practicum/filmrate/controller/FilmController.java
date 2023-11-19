@@ -2,7 +2,9 @@ package ru.yandex.practicum.filmrate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmrate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmrate.exception.ValidateException;
 import ru.yandex.practicum.filmrate.model.Film;
 import ru.yandex.practicum.filmrate.storage.FilmService;
@@ -10,6 +12,7 @@ import ru.yandex.practicum.filmrate.storage.InMemoryFilmStorage;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -23,6 +26,12 @@ public class FilmController {
     public FilmController(InMemoryFilmStorage inMemoryFilmStorage, FilmService filmService) {
         this.inMemoryFilmStorage = inMemoryFilmStorage;
         this.filmService = filmService;
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleFilmNotFound(final FilmNotFoundException e) {
+        return Map.of("Ошибка", e.getMessage());
     }
 
     @GetMapping(value = "/films/{id}")

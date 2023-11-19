@@ -22,18 +22,13 @@ public class FilmService {
         this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
-    /*Comparator<Film> comparator = new Comparator<Film>() {
-            @Override
-            public int compare(Film o1, Film o2) {
-                return o1.getLikeList().size() - o2.getLikeList().size();
-            }
-        };*/
-
     public List<Film> getCountFilms(Integer count) {
+
         Comparator<Film> comparator = Comparator.comparingInt(film -> film.getLikeList().size());
         List<Film> films = inMemoryFilmStorage.getAll();
         Collections.sort(films, comparator);
-
+        List<Film> test = films.stream().limit(count).collect(Collectors.toList());
+        System.out.println("TEST " + test.toString());
         return films.stream().limit(count).collect(Collectors.toList());
     }
 
@@ -42,10 +37,11 @@ public class FilmService {
     }
 
     public void deleteLike(Integer id, Integer userId) {
-        inMemoryFilmStorage.getFilm(id).getLikeList().remove(inMemoryUserStorage.getUser(userId));
+        inMemoryFilmStorage.getFilm(id).deleteLike(userId);
     }
 
     public void putLike(Integer id, Integer userId) {
-        inMemoryFilmStorage.getFilm(id).getLikeList().add(inMemoryUserStorage.getUser(userId));
+        System.out.println("Ставлю лайк");
+        inMemoryFilmStorage.getFilm(id).addLike(userId);
     }
 }

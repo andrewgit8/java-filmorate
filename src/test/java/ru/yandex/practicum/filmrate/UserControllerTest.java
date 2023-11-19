@@ -48,6 +48,9 @@ public class UserControllerTest {
         users.add(user);
         users.add(user1);
 
+        userController.addFriend(1, 2);
+        userController.getUserById(1);
+
         assertArrayEquals(users.toArray(), userController.getAll().toArray());
     }
 

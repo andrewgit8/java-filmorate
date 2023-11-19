@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmrate.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.util.HashSet;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Data
 @NoArgsConstructor
@@ -23,8 +25,7 @@ public class User {
     private String name;
     @PastOrPresent
     private LocalDate birthday;
-
-    private Set<User> friendlist = new HashSet<>();
+    private Set<Integer> friendlist = new HashSet<>();
 
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
@@ -40,8 +41,17 @@ public class User {
         this.birthday = birthday;
     }
 
-    public Set<User> getFriendlist() {
+    public Set<Integer> getFriendlist() {
         return friendlist;
     }
+
+    public void addFriend(Integer id) {
+        friendlist.add(id);
+    }
+
+    public void deleteFriend(Integer id) {
+        friendlist.remove(id);
+    }
+
 }
 
