@@ -12,6 +12,7 @@ import java.util.*;
 @Service
 public class UserService {
     InMemoryUserStorage inMemoryUserStorage;
+
     @Autowired
     public UserService(InMemoryUserStorage inMemoryUserStorage) {
         this.inMemoryUserStorage = inMemoryUserStorage;

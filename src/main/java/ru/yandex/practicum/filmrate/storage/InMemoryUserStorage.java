@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmrate.exception.ValidateException;
 import ru.yandex.practicum.filmrate.model.User;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +12,10 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class InMemoryUserStorage implements UserStorage{
+public class InMemoryUserStorage implements UserStorage {
     private int id = 1;
     private Map<Integer, User> users = new HashMap<>();
+
     @Override
     public List<User> getAll() {
         return new ArrayList<>(users.values());

@@ -4,11 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmrate.exception.FilmIllegalArgumentException;
 import ru.yandex.practicum.filmrate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmrate.exception.ValidateException;
 import ru.yandex.practicum.filmrate.model.Film;
 import ru.yandex.practicum.filmrate.storage.FilmService;
 import ru.yandex.practicum.filmrate.storage.InMemoryFilmStorage;
+
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,10 +36,16 @@ public class FilmController {
         return Map.of("Ошибка", e.getMessage());
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleIllegalArgument(final FilmIllegalArgumentException e) {
+        return Map.of("Ошибка", e.getMessage());
+    }
+
     @GetMapping(value = "/films/{id}")
-        public Film getFilmById(@PathVariable Integer id) {
-            return inMemoryFilmStorage.getFilm(id);
-        }
+    public Film getFilmById(@PathVariable Integer id) {
+        return inMemoryFilmStorage.getFilm(id);
+    }
 
     @GetMapping(value = "/films/popular")
     public List<Film> getCountFilms(@RequestParam(required = false, defaultValue = "10") String count) {
@@ -75,7 +83,7 @@ public class FilmController {
     }
 
     private void validate(Film film) throws ValidateException {
-         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             log.error("Дата релиза фильма {} была введена ошибочно. Фильм не может быть выпущен раньше 28.12.1895", film.getName());
             throw new ValidateException("Некорректный ввод даты релиза");
         }

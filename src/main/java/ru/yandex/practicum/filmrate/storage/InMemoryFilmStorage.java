@@ -5,13 +5,15 @@ import ru.yandex.practicum.filmrate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmrate.exception.ValidateException;
 import ru.yandex.practicum.filmrate.model.Film;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @Slf4j
 @Component
-public class InMemoryFilmStorage implements FilmStorage{
+public class InMemoryFilmStorage implements FilmStorage {
     private int id = 1;
     private Map<Integer, Film> films = new HashMap<>();
 
