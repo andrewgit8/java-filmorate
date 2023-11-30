@@ -1,10 +1,12 @@
-package ru.yandex.practicum.filmrate.storage;
+package ru.yandex.practicum.filmrate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmrate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmrate.exception.NotFoundException;
+import ru.yandex.practicum.filmrate.exception.ValidateException;
 import ru.yandex.practicum.filmrate.model.User;
 import lombok.extern.slf4j.Slf4j;
+import ru.yandex.practicum.filmrate.storage.InMemoryUserStorage;
 
 import java.util.*;
 
@@ -20,7 +22,7 @@ public class UserService {
 
     public User getUserById(Integer id) {
         if (inMemoryUserStorage.getUser(id) == null) {
-            throw new UserNotFoundException("Такого друга не существует");
+            throw new NotFoundException("Такого друга не существует");
         }
         return inMemoryUserStorage.getUser(id);
     }
@@ -36,6 +38,23 @@ public class UserService {
         return commonList;
     }
 
+    public User create(User user) {
+        return inMemoryUserStorage.create(user);
+    }
+
+    public List<User> getAll() {
+        return inMemoryUserStorage.getAll();
+    }
+
+    public User update(User user) {
+        if (getUserById(user.getId()) == null) {
+            log.error("Было невозможно обновить данные, пользователь {} не существовал", user.getId());
+            throw new ValidateException("User с " + user.getId() + " идентификатором не существует. Вызовите метод POST");
+        } else {
+            return inMemoryUserStorage.update(user);
+        }
+    }
+
     public Set<User> getFriends(Integer id) {
         Set<User> userList = new TreeSet<>(Comparator.comparing(x -> x.getId()));
         for (Integer number : getUserById(id).getFriendlist()) {
@@ -47,9 +66,8 @@ public class UserService {
 
     public void addFriend(Integer id, Integer friendId) {
         if (inMemoryUserStorage.getUser(friendId) == null) {
-            throw new UserNotFoundException("Такого друга не существует");
+            throw new NotFoundException("Такого друга не существует");
         }
-
 
         inMemoryUserStorage.getUser(id).addFriend(inMemoryUserStorage.getUser(friendId).getId());
         inMemoryUserStorage.getUser(friendId).addFriend(inMemoryUserStorage.getUser(id).getId());
@@ -61,6 +79,4 @@ public class UserService {
         inMemoryUserStorage.getUser(id).deleteFriend(inMemoryUserStorage.getUser(friendId).getId());
         inMemoryUserStorage.getUser(friendId).deleteFriend(inMemoryUserStorage.getUser(id).getId());
     }
-
-
 }

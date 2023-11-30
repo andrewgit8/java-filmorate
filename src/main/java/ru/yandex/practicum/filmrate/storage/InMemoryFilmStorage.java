@@ -1,8 +1,6 @@
 package ru.yandex.practicum.filmrate.storage;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmrate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmrate.exception.ValidateException;
 import ru.yandex.practicum.filmrate.model.Film;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,20 +30,13 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film update(Film film) {
-        if (films.get(film.getId()) == null) {
-            log.error("Был передан несуществующий в базе данных фильм {}", film.getName());
-            throw new ValidateException("Фильма  " + film.getName() + " не существует. Вызовите метод POST");
-        } else {
-            films.put(film.getId(), film);
-            log.info("Задача под номером " + film.getId() + " успешно обновлена");
-        }
+
+        log.info("Задача под номером " + film.getId() + " успешно обновлена");
+        films.put(film.getId(), film);
         return film;
     }
 
     public Film getFilm(Integer id) {
-        if (films.get(id) == null) {
-            throw new FilmNotFoundException("Фильма с таким идентификатором нет в базе");
-        }
         return films.get(id);
     }
 }
