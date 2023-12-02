@@ -26,10 +26,14 @@ public class FilmService {
         this.inMemoryFilmStorage = inMemoryFilmStorage;
     }
 
-    public List<Film> getCountFilms(Integer count) {
+    public List<Film> getTopFilms(Integer count) {
         Comparator<Film> comparator = Comparator.comparingInt(film -> film.getLikeList().size());
 
-        return inMemoryFilmStorage.getAll().stream().sorted(comparator.reversed()).limit(count).collect(Collectors.toList());
+        return inMemoryFilmStorage.getAll()
+                .stream()
+                .sorted(comparator.reversed())
+                .limit(count)
+                .collect(Collectors.toList());
     }
 
     public Optional<Film> getFilmById(Integer id) {
