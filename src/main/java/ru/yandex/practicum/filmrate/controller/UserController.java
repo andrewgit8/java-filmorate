@@ -1,48 +1,69 @@
 package ru.yandex.practicum.filmrate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmrate.exception.ValidateException;
 import ru.yandex.practicum.filmrate.model.User;
+import ru.yandex.practicum.filmrate.service.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @RestController
 public class UserController {
-    private int id = 1;
-    private Map<Integer, User> users = new HashMap<>();
+    UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping(value = "/users/{id}")
+    public User getUserById(@PathVariable Integer id) {
+        return userService.getUserById(id);
+    }
+
+    @GetMapping(value = "/users/{id}/friends/common/{otherId}")
+    public Set<User> getCommonFriends(@PathVariable Integer id,
+                                      @PathVariable Integer otherId) {
+        return userService.getCommonFriends(id, otherId);
+    }
+
+    @GetMapping(value = "/users/{id}/friends")
+    public Set<User> getFriends(@PathVariable Integer id) {
+        return userService.getFriends(id);
+    }
+
+    @PutMapping(value = "/users/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable Integer id,
+                          @PathVariable Integer friendId) {
+        userService.addFriend(id, friendId);
+    }
+
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public void deleteFriend(@PathVariable Integer id,
+                             @PathVariable Integer friendId) {
+        userService.deleteFriend(id, friendId);
+    }
 
     @GetMapping(value = "/users")
     public List<User> getAll() {
-        return new ArrayList<>(users.values());
+        return userService.getAll();
     }
 
     @PostMapping(value = "/users")
     public User create(@Valid @RequestBody User user) throws ValidateException {
         nameChecker(user);
-        user.setId(id++);
-        users.put(user.getId(), user);
-        log.info("Был/а зарегистрирован новый юзер {} идентификатор: {}", user.getLogin(), user.getId());
-        return user;
+        return userService.create(user);
     }
 
     @PutMapping(value = "/users")
     public User update(@Valid @RequestBody User user) throws ValidateException {
         nameChecker(user);
-
-        if (users.get(user.getId()) == null) {
-            log.error("Было невозможно обновить данные, пользователь {} не существовал", user.getId());
-            throw new ValidateException("User с " + user.getId() + " идентификатором не существует. Вызовите метод POST");
-        } else {
-            users.put(user.getId(), user);
-            log.info("Данные под идентификатором {} были обновлены", user.getId());
-        }
-        return user;
+        return userService.update(user);
     }
 
     private void nameChecker(User user) {
